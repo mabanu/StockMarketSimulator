@@ -9,6 +9,7 @@ export class NasdaqData extends Component {
     }
 
     static renderForecastsTable(forecasts) {
+        console.log(forecasts)
         return (
             <table className="table table-striped" aria-labelledby="tableLabel">
                 <thead>

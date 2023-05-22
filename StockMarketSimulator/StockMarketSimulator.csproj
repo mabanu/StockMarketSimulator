@@ -46,6 +46,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Development\"/>
       <Folder Include="Logs\" />
       <Folder Include="Validation\" />
     </ItemGroup>
