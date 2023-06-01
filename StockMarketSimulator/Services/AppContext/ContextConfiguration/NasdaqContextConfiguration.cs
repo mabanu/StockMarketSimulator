@@ -15,6 +15,7 @@ public class NasdaqContextConfiguration : IEntityTypeConfiguration<Nasdaq>
     builder.HasData(SeedNasdaqData());
   }
 
+
   public List<Nasdaq> SeedNasdaqData()
   {
     using var reader = new StreamReader("Services/AppContext/Data/Nasdaq2018.csv");

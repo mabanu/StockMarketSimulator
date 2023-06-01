@@ -1,4 +1,11 @@
-﻿import {VictoryAxis, VictoryCandlestick, VictoryChart, VictoryTheme} from "victory";
+﻿import {
+    VictoryAxis,
+    VictoryBrushContainer,
+    VictoryCandlestick,
+    VictoryChart,
+    VictoryCursorContainer,
+    VictoryTheme
+} from "victory";
 import {useEffect, useState} from "react";
 
 type Nasdaq = {
@@ -10,7 +17,6 @@ type Nasdaq = {
     high: number,
     low: number
 }
-
 type NasdaqRateData = {
     x: Date,
     close: number,
@@ -19,24 +25,22 @@ type NasdaqRateData = {
     low: number
 }
 
-function request<TResponse>(url: string): Promise<TResponse> {
-    return fetch(url)
-        .then(response => response.json())
-        .then(data => data as TResponse);
+async function request<TResponse>(url: string): Promise<TResponse[]> {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // @ts-ignore
+    const dataSort = await data.sort((a: TResponse, b: TResponse) => a.date < b.date ? -1 : 1);
+    return dataSort as TResponse[];
 }
 
-
 function Candle() {
-    const [data, setData] = useState<NasdaqRateData[]>([])
+    const [data, setData] = useState<NasdaqRateData[]>([]);
+    const [renderData, setRenderData] = useState<NasdaqRateData[]>([])
 
     useEffect(() => {
-        request<Nasdaq[]>("nasdaq").then(r => {
-            r.sort((a, b) => {
-                if (a.date < b.date) {
-                    return -1;
-                }
-                return 1;
-            });
+        request<Nasdaq>("nasdaq").then(r => {
+
             let rates: NasdaqRateData[] = [];
             r.forEach(row => {
                 let item: NasdaqRateData = {
@@ -51,24 +55,53 @@ function Candle() {
             })
 
             setData(rates);
+            setRenderData(rates);
 
         })
 
     }, [])
 
-
-    console.log(data)
-
     return (
         <>
+            <VictoryChart
+                theme={VictoryTheme.material}
+                domainPadding={{x: 25}}
+                scale={{x: "time"}}
+                containerComponent={
+                    <VictoryCursorContainer
+                        cursorLabel={({datum}) => `Hello, ${(Math.round(datum.y))}`}
+                    />
+                }
+            >
+
+                <VictoryAxis/>
+
+                <VictoryAxis dependentAxis/>
+
+                <VictoryCandlestick
+                    candleColors={{positive: "#5f5c5b", negative: "#c43a31"}}
+                    data={renderData}
+                />
+            </VictoryChart>
 
             <VictoryChart
                 theme={VictoryTheme.material}
                 domainPadding={{x: 25}}
                 scale={{x: "time"}}
+                containerComponent={
+                    <VictoryBrushContainer
+                        responsive={true}
+                        brushDimension='x'
+                        brushDomain={renderData}
+                        onBrushDomainChange={(domain) => console.log(domain)}
+                    />
+                }
             >
+
                 <VictoryAxis/>
+
                 <VictoryAxis dependentAxis/>
+
                 <VictoryCandlestick
                     candleColors={{positive: "#5f5c5b", negative: "#c43a31"}}
                     data={data}

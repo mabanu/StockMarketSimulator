@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using StockMarketSimulator.Entities;
 using StockMarketSimulator.Repositories.NasdaqRepository;
 
@@ -16,6 +17,7 @@ public class NasdaqController : ControllerBase
   }
 
   [HttpGet]
+  [OutputCache]
   public ActionResult<List<Nasdaq>> GetNasdaqRates()
   {
     if (_nasdaqRepository == null) return NotFound();

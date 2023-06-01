@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace StockMarketSimulator.Entities;
 
@@ -18,11 +19,19 @@ public class Nasdaq
     Low = low;
   }
 
-  [Key] public Guid Id { get; private set; } = Guid.NewGuid();
-  public DateOnly Date { private set; get; }
-  public float CloseLast { private set; get; }
-  [StringLength(30)] public string Volume { private set; get; }
-  public float Open { private set; get; }
-  public float High { private set; get; }
-  public float Low { private set; get; }
+  [Key] [JsonPropertyName("id")] public Guid Id { get; private set; } = Guid.NewGuid();
+
+  [JsonPropertyName("date")] public DateOnly Date { private set; get; }
+
+  [JsonPropertyName("closeLast")] public float CloseLast { private set; get; }
+
+  [StringLength(30)]
+  [JsonPropertyName("volume")]
+  public string Volume { private set; get; } = null!;
+
+  [JsonPropertyName("open")] public float Open { private set; get; }
+
+  [JsonPropertyName("high")] public float High { private set; get; }
+
+  [JsonPropertyName("low")] public float Low { private set; get; }
 }

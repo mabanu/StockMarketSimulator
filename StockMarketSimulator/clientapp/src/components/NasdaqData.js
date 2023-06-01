@@ -26,7 +26,7 @@ export class NasdaqData extends Component {
                         <td>{forecast.date}</td>
                         <td>{forecast.low}</td>
                         <td>{forecast.high}</td>
-                        
+
                     </tr>
                 )}
                 </tbody>
