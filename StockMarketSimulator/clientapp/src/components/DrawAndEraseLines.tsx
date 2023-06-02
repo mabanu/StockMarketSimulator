@@ -33,7 +33,10 @@ const DrawAndEraseLines: React.FC = () => {
     };
 
     const eraseLastLine = () => {
-        if (lines.length === 0) return;
+        if (lines.length === 0) {
+            redrawCanvas();
+            return;
+        }
 
         setLines((prevLines) => prevLines.slice(0, -1));
         redrawCanvas();

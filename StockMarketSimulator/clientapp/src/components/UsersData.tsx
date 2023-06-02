@@ -1,14 +1,7 @@
 ﻿import {useEffect, useState} from "react";
 
-enum Order {
-    Sale, Buy
-}
-
 interface User {
     name: string,
-    stock: string,
-    order: Order,
-    quantity: number
 }
 
 function UsersData() {
@@ -23,7 +16,7 @@ function UsersData() {
 
     return (
         <>
-            {data?.map((user, index) => <div key={index}>{user.name} {Order[user.order]}</div>)}
+            {data?.map((user, index) => <div key={index}>{user.name}</div>)}
         </>
     )
 }

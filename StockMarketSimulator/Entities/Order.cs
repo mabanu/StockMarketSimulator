@@ -9,22 +9,45 @@ public class Order
   {
   }
 
-  public Order(string stock, int quantity, BuySale buySale)
+  public Order(string stock, int quantity, BuySale buySale, float initialPrice, Guid userId)
   {
+    Id = Guid.NewGuid();
     Stock = stock;
     Quantity = quantity;
     BuySale = buySale;
+    InitialPrice = initialPrice;
+    IsPositionOpen = true;
+    UserId = userId;
   }
 
-  [Key] public Guid Id { get; set; } = Guid.NewGuid();
+  [Key] public Guid Id { get; init; }
 
-  [MaxLength(40)] public string Stock { get; set; } = null!;
+  [MaxLength(40)] public string Stock { get; init; } = null!;
 
-  public int Quantity { get; set; }
+  public int Quantity { get; init; }
 
-  public BuySale BuySale { get; set; }
+  public BuySale BuySale { get; init; }
 
-  public Guid UserId { get; set; }
+  public float InitialPrice { get; init; }
 
-  [ForeignKey("UserId")] public User User { get; set; }
+  public float? FinalPrice { get; private set; }
+
+  public bool IsPositionOpen { get; private set; }
+
+  public DateTime CreatedAt { get; init; } = DateTime.Now;
+
+  public DateTime? CloseAt { get; private set; }
+
+  public Guid UserId { get; init; }
+
+  [ForeignKey("UserId")] public User? User { get; set; }
+
+  public void CloseOrder(float finalPrice)
+  {
+    if (!IsPositionOpen) return;
+
+    CloseAt = DateTime.Now;
+    FinalPrice = finalPrice;
+    IsPositionOpen = false;
+  }
 }
